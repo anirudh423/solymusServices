@@ -12,6 +12,18 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { child } = require('winston');
+const Razorpay = require('razorpay');
+
+const RAZORPAY_KEY_ID = "rzp_test_W0q8bCk2g0pA4Z";
+const RAZORPAY_KEY_SECRET = "u9V4n4v1qzK1Yl7SmHqXKq7V";
+
+if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
+  console.warn('Razorpay keys not configured');
+}
+
+const razorpay = (RAZORPAY_KEY_ID && RAZORPAY_KEY_SECRET)
+  ? new Razorpay({ key_id: RAZORPAY_KEY_ID, key_secret: RAZORPAY_KEY_SECRET })
+  : null;
 router.get('/', (req, res) => {
     console.log('Received quote policy request:', req.body);
     res.status(200).send('Request received and being processed.');
@@ -326,6 +338,55 @@ router.post('/retrieve', async (req, res) => {
         const log = childLogger({route : 'retrieve'});
         log.error(error.message);
         res.status(500).send(encryptData({message:'internal server error'}));
+    }
+})
+
+router.post('/purchase', async (req,res) => {
+    logger.info('policy purhcase')
+    try {
+        const log = childLogger({route: 'policy purchase'})
+        const data = decryptData(req.body.encryptedData)
+        if (!data) {
+            log.error('invalid data')
+            res.status(400).send(encryptData({message:'invalid data'}));
+        }
+        const rulesColl = await dbConnect('Solymus', 'quoteRules');
+    const pricingRules = await rulesColl.find({}).toArray();
+
+    const quote = computeFullQuote(pricingRules, data.quoteRequest, { debug: false });
+    const currency = (data.payment.currency || 'INR').toUpperCase();
+    const amountInUnits = parseInt(quote.totalPayable || 0);
+    const amountForProvider =  Math.round(amountInUnits * 100);
+
+    const purchaseId = 'purchase';
+    const now = new Date().toISOString();
+    
+
+    const orderOptions = {
+      amount: amountForProvider,
+      currency,
+      receipt: purchaseId, 
+      notes: { purchaseId, customerName: data.customer.name }
+    };
+
+    let order;
+    
+var instance = new Razorpay({ key_id: 'YOUR_KEY_ID', key_secret: 'YOUR_SECRET' })
+
+order = await instance.orders.create({
+  amount: 50000,
+  currency: "INR",
+  receipt: "receipt#1",
+  notes: {
+    key1: "value3",
+    key2: "value2"
+  }
+})    
+    } catch (error) {
+
+        const log = childLogger({route : 'error'});
+        log.error(error.message)
+        res.status(500).send(encryptData({message : error.message}))
     }
 })
 

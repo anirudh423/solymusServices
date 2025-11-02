@@ -79,8 +79,27 @@ app.use('/api/contact', contactRoutes,createProxyMiddleware({
 
 console.log('Encrypted Data:', 
 encryptData({
-  _id:0
+  "quoteRequest": {
+    "productType": "health",
+    "age": 35,
+    "sumInsured": 500000,
+    "paymentFrequency": "annual",
+    "addOnsRequested": ["maternity","hospitalcash"]
+  },
+  "customer": {
+    "name": "Rajesh Kumar",
+    "email": "rajesh.kumar@example.com",
+    "phone": "+919876543210",
+    "customerId": "c_12345"  // optional internal id
+  },
+  "payment": {
+    "provider": "stripe",         // "stripe" or "razorpay" (or "manual")
+    "currency": "INR",            // currency code
+    "returnUrl": "https://app.example.com/pay/complete" // for redirect flows
+  },
+  "idempotencyKey": "client-provided-unique-key-abc-123" // recommended
 }
+
 
 
 
@@ -98,7 +117,7 @@ const payloadFull = {
   tenantId: 'solymus-corp'
 };
 
-console.log('decrypted Data:', decryptData('35af95f7a0e3173039c7de1e428495f3527472889852b88f18f912a11babcbeeeb7217ee6f92d32680629d9421b0cbbb313f8feb7ab0168894a52c02a5e5b92d41abc08b93e2f6380b59a34d4ed3b495c481ab009a2def6d1bd65d22a43e1ff89b3cbb54c218dec6a8e9494e9b36c204df1981ec30ca50f08d3a6b773a3ce838a2c94d739d1f57c1c93c6785919ea633e598f771f624f3b4c15aef78a872c083'));
+console.log('decrypted Data:', decryptData('a66836a0bd3449e5888914294676edc0'));
 
 const token = generateToken(payloadFull); 
 console.log('token:', token,'token');
