@@ -1,2 +1,3 @@
-_id,name,address,city,state,pincode,services,phone,lat,lng
-103,Solymus Clinic CSV,56 Csv St,Pune,Maharashtra,411003,"Lab,Dental",+919000000003,18.521,73.858
+_id,productType,minAge,maxAge,basePremium,sumInsured,addOns,effectiveFrom
+r1,health,26,40,500,100000,"maternity:percent:0.02;hospitalcash:absolute:200",2025-01-01
+r2,health,41,60,800,100000,"maternity:percent:0.03",2025-01-01

@@ -1,11 +1,16 @@
 const express = require('express');
-const { decryptData, encryptData, encryptionService } = require('../utils/encryption.utils');
+const { decryptData, encryptData, encryptionService, verifyToken } = require('../utils/encryption.utils');
 const { dbConnect } = require('../database/config');
 const { logger, childLogger, logDir } = require('../utils/logger.utils');
 const { quickQuote } = require('../utils/quick-quote.utils');
 const { computeFullQuote } = require('../utils/full-quote.utils');
-const router = express.Router();
+const multer = require('multer');
 
+const router = express.Router();
+const csvParser = require('csv-parser');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
 router.get('/', (req, res) => {
     console.log('Received quote policy request:', req.body);
     res.status(200).send('Request received and being processed.');
@@ -95,5 +100,211 @@ router.post('/full', async (req,res) => {
         res.status(500).send(encryptData({ message: 'Error processing full quote request' }));
     }
 })
+
+const upload = multer({
+  dest: path.join(os.tmpdir(), 'solymus-uploads'),
+  limits: { fileSize: 10 * 1024 * 1024 } 
+});
+
+
+function normalizeRow(raw) {
+  const pick = (k) => raw[k] !== undefined && raw[k] !== null ? raw[k] : undefined;
+
+  const idRaw = pick('_id') ?? pick('id'); 
+  if (idRaw === undefined || idRaw === '') return null;
+
+  let id = idRaw;
+  if (typeof idRaw === 'string' && /^[0-9]+$/.test(idRaw)) id = parseInt(idRaw, 10);
+
+  
+
+  return {
+    _id: id,
+    minAge: parseInt(pick('minAge')),
+    maxAge: parseInt(pick('maxAge') ),
+    basePremium: parseInt(pick('basePremium') ),
+    sumInsured: parseInt(pick('sumInsured') ),
+    addOns: String(pick('addOns') ?? '').trim(),
+    effectiveFrom: String(pick('effectiveFrom') ?? '').trim(),
+    productType: String(pick('productType') ?? '').trim()
+  };
+}
+
+
+router.post('/bulk-upload', upload.single('file'), async (req, res) => {
+  logger.info('Bulk uploading quote rules (file upload)');
+  const log = childLogger({ route: 'bulk-upload-quote-rules' });
+
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      log.error('token missing');
+      return res.status(401).send(encryptData({ message: 'Authorization token missing' }));
+    }
+    if (!authHeader.startsWith('Bearer ')) {
+      log.error('invalid token format');
+      return res.status(403).send(encryptData({ message: 'Invalid token format' }));
+    }
+
+    const token = authHeader.slice(7).trim();
+    let payload;
+    try {
+      payload = verifyToken(token);
+    } catch (err) {
+      log.error('token verification failed', { err: { message: err.message, stack: err.stack } });
+      return res.status(401).send(encryptData({ message: 'Invalid or expired token' }));
+    }
+
+    const isAdmin = (Array.isArray(payload.role) && payload.role.includes('Administrator'))
+      || payload.role === 'Administrator'
+      || (Array.isArray(payload.role) && payload.role.includes('admin'))
+      || payload.role === 'admin';
+    if (!isAdmin) {
+      log.error('role missing in token');
+      return res.status(403).send(encryptData({ message: 'Admin role required' }));
+    }
+
+    if (!req.file) {
+      log.error('no file uploaded');
+      return res.status(400).send(encryptData({ message: 'No file uploaded' }));
+    }
+
+    const tmpPath = req.file.path;
+    const originalName = req.file.originalname || '';
+    const ext = path.extname(originalName).toLowerCase();
+
+    const documents = [];
+    let invalidCount = 0;
+    let processedCount = 0;
+
+    function pushDoc(normalized) {
+      if (!normalized) {
+        invalidCount++;
+        return;
+      }
+      const doc = {
+        _id: normalized._id,
+        minAge: (normalized.minAge),
+        maxAge: (normalized.maxAge ),
+        basePremium: (normalized.basePremium ),
+        sumInsured: (normalized.sumInsured ),
+        addOns: encryptionService(normalized.addOns ),
+        effectiveFrom: encryptionService(normalized.effectiveFrom ),
+        productType: encryptionService(normalized.productType )
+      };
+      documents.push(doc);
+    }
+
+    const isJson = ext === '.json' || req.file.mimetype === 'application/json' || req.file.mimetype === 'text/json';
+    const isCsv = ext === '.csv' || req.file.mimetype === 'text/csv' || req.file.mimetype === 'application/vnd.ms-excel';
+
+    if (isJson) {
+      const raw = fs.readFileSync(tmpPath, 'utf8');
+      let parsed;
+      try {
+        parsed = JSON.parse(raw);
+      } catch (err) {
+        fs.unlinkSync(tmpPath);
+        log.error('JSON parse error', { message: err.message });
+        return res.status(400).send(encryptData({ message: 'Uploaded JSON is invalid' }));
+      }
+
+      let items = [];
+      if (Array.isArray(parsed)) items = parsed;
+      else if (parsed && Array.isArray(parsed.hospitals)) items = parsed.hospitals;
+      else {
+        fs.unlinkSync(tmpPath);
+        log.error('JSON does not contain array of quote rules');
+        return res.status(400).send(encryptData({ message: 'JSON must be array or { hospitals: [...] }' }));
+      }
+
+      items.forEach(raw => {
+        const normalized = normalizeRow(raw);
+        if (normalized) {
+          pushDoc(normalized);
+        } else {
+          invalidCount++;
+        }
+        processedCount++;
+      });
+
+    } else if (isCsv) {
+      await new Promise((resolve, reject) => {
+        const stream = fs.createReadStream(tmpPath)
+          .pipe(csvParser({ mapHeaders: ({ header }) => header.trim() }))
+          .on('data', (row) => {
+            processedCount++;
+            const normalized = normalizeRow(row);
+            if (normalized) pushDoc(normalized);
+            else invalidCount++;
+          })
+          .on('end', () => resolve())
+          .on('error', (err) => reject(err));
+      });
+    } else {
+      try {
+        const raw = fs.readFileSync(tmpPath, 'utf8');
+        const parsed = JSON.parse(raw);
+        let items = Array.isArray(parsed) ? parsed : (parsed && Array.isArray(parsed.quoteRules) ? parsed.quoteRules : []);
+        if (items.length === 0) throw new Error('not-json-array');
+        items.forEach(raw => {
+          const normalized = normalizeRow(raw);
+          if (normalized) pushDoc(normalized);
+          else invalidCount++;
+          processedCount++;
+        });
+      } catch (err) {
+        await new Promise((resolve, reject) => {
+          fs.createReadStream(tmpPath)
+            .pipe(csvParser({ mapHeaders: ({ header }) => header.trim() }))
+            .on('data', (row) => {
+              processedCount++;
+              const normalized = normalizeRow(row);
+              if (normalized) pushDoc(normalized);
+              else invalidCount++;
+            })
+            .on('end', () => resolve())
+            .on('error', (err2) => reject(err2));
+        });
+      }
+    }
+
+    try { fs.unlinkSync(tmpPath); } catch (e) {}
+
+    if (documents.length === 0) {
+      log.warn('No valid quote rules documents to insert', { processedCount, invalidCount });
+      return res.status(400).send(encryptData({ message: 'No valid records found in uploaded file', processedCount, invalidCount }));
+    }
+
+   
+    const collection = await dbConnect('Solymus', 'quoteRules');
+    let insertResult;
+    try {
+      insertResult = await collection.insertMany(documents, { ordered: false });
+    } catch (insertErr) {
+      log.error('insertMany returned error', { error: { message: insertErr.message, writeErrors: insertErr.writeErrors?.length ?? 0 } });
+      insertResult = insertErr.result || insertErr;
+    }
+
+    const insertedCount = insertResult.insertedCount || (insertResult.nInserted || 0);
+    const failedCount = processedCount - insertedCount;
+
+    log.info('Bulk upload summary', { processedCount, insertedCount, failedCount, invalidCount });
+
+    return res.status(200).send(encryptData({
+      message: 'Bulk upload completed',
+      processedCount,
+      insertedCount,
+      failedCount,
+      invalidCount
+    }));
+  } catch (error) {
+    log.error('Unhandled error during bulk upload', {
+      route: 'bulk-upload-quote-rules',
+      error: { message: error.message, stack: error.stack }
+    });
+    return res.status(500).send(encryptData({ message: 'Internal server error' }));
+  }
+});
 
 module.exports = router;
