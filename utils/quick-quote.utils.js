@@ -68,14 +68,5 @@ function quickQuote(payload) {
   };
 }
 
-const example = quickQuote({
-  age: 35,
-  product: 'health',
-  sumInsured: 500000,
-  tenureYears: 1,
-  paymentFrequency: 'annual',
-  smoker: false
-});
 
-console.log(example);
 module.exports = { quickQuote };
