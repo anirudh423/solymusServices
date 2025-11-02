@@ -3,6 +3,7 @@ const { decryptData, encryptData, encryptionService } = require('../utils/encryp
 const { dbConnect } = require('../database/config');
 const { logger, childLogger, logDir } = require('../utils/logger.utils');
 const { quickQuote } = require('../utils/quick-quote.utils');
+const { computeFullQuote } = require('../utils/full-quote.utils');
 const router = express.Router();
 
 router.get('/', (req, res) => {
@@ -69,6 +70,29 @@ router.post('/quick' , async (req,res) => {
     } catch (error) {
         log.error('Error processing quick quote request', { error });
         res.status(500).send(encryptData({ message: 'Error processing quick quote request' }));
+    }
+});
+
+router.post('/full', async (req,res) => {
+    logger.info('Processing full quote request');
+    try {
+        const log =  childLogger({ route: 'full-quote' });
+        var data = decryptData(req.body.encryptedData);
+        if (!data) {
+            log.error('Decrypted data is invalid');
+            return res.status(400).send('Invalid encrypted data');
+        }
+        var collection = await dbConnect('Solymus', 'quoteRules');
+        var response = await collection.find({}).toArray();
+
+        log.debug('Full quote rules fetched successfully', { count: response.length });
+        var result =  await computeFullQuote(response,data);
+        log.debug('Full quote computed successfully', { quote: result });
+        res.status(200).send(encryptData({ quote: result }));
+    } catch (error) {
+        const log =  childLogger({ route: 'full-quote', error: error.message });
+        log.error('Error processing full quote request', { error });
+        res.status(500).send(encryptData({ message: 'Error processing full quote request' }));
     }
 })
 

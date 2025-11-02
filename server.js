@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 
-const app = express();
+const app =     express();
 const quotePolicyRoutes =   require('./routes/quotePolicyRoutes');
 const hospitalRoutes =  require('./routes/hospitalRoutes');
 const branchRoutes = require('./routes/branchesRoutes');
@@ -94,6 +94,7 @@ encryptData({
 
 );
 
+console.log('encryption' , encryptionService("[{\"code\":\"maternity\",\"type\":\"percent\",\"value\":0.02},{\"code\":\"hospitalcash\",\"type\":\"absolute\",\"value\":200}]") , 'encryption');
 
 const payloadFull = {
   userId: 'u_12345',
@@ -103,7 +104,7 @@ const payloadFull = {
   tenantId: 'solymus-corp'
 };
 
-console.log('decrypted Data:', decryptData('b56ebe1a73fa1bf011cddc969db8813f79494ea0df44d25d03c84431db0d6fda2360f49b9f97da648f403cb32875cbd515af9ebbcf44c841014d916bac89c03504e4bb944c936d10aae6aa8bf4d1c17e8f12bf1bf9b3fe38276a0644c6fb4427c691ccc6116cec6de6819888e431e162312454ac53305fe22412b2379153ee1c51999ffacbdba962a02c166ad22df9b827e818173d473a90ca890371823d9d937e45b761eb624b65040eabd25bdf6f1b74ab38a72c984a29bfbd8da87d26a1ba98008683c83c08619601d8128f244fc3d8624551e1558fb3e76431875c6931a7ed68bc597ca5b8a9e8c8f02d03b6c89cec85640569dd5550fe3410f8a7cf895249c4a3213d8dc714de2cf242986d0af03fb08fee83eb4cba474fd590cda40e4431b26f96f2bf2f936a352752d34c8d5b3bfe3a2726c3fc48a8267606851d75e3a6d06169b0f604f6a116dabe52fc323f68eed09181b9bcdf30f67a3aeb9c0897a259e41cf24144be72fec61d1b2addcba16570ff9f7b1039394619d3570e9585e987b90f731e518626dcb09d55082123'));
+console.log('decrypted Data:', decryptData('b56ebe1a73fa1bf011cddc969db8813f5ef9b50c13d7f2cb4a931bdc197a271d4a169a11d2a38e3c8c6df3ede56794cc4160a7e6e57b38fa5c3a49f7fcfbcbc2feba84364d0fb151b276c0c9528d195e998134d45558c50f9935c8fc311a9f09e655ada452d1437302330c89f80769a85a444a740ac88bfca6fd5e8fa8795f272d9041ab529820b185c8c60c7cb777324754ef70b2d13462f6e4f5fd294ed1abd74598c7b17d072ddc3da9047624aa8b598f624697931ac202076c922ba038b528e8a7801f81e3834f9cb852ea29da3d4a7dcc0bbd005a2ebbe012ee288d87927c7fc8427288bc1bc888baa12e2980b62d074237808285557fa1f95b3d3e9396d991270bb1a6cde362bb5beb1217bc39906d7b975c29a9d96ae566f31c48f35bb2cf4372729c0e4326f0f69e6363349fc3c9e41db7451be1148f20ac96057e2e9e27a518bb2500744ed96c525a485b99ded2ca6eb843f6a74bfa500437c9e516cec3919237b86ef86eddadc1746eb2955616aa08513265a871ab62e783c9e1a714cc26fb0d729aba3784162a68114d99319d51cd3586f8679631d99ed824e51af4f120f8f34feffa4d295466b0ecd0d26e6f05a0c5b346bee861e5a8be7fcfaa22c5e8a53a2b226cbc9abfd88385d44948715110c07873e752c3191d2d528f05a9a6e212fb65738924f78f8cd18bec3fc6e0dffc8482f475b96d028c2e98a957e4e80da5ef69b23a8f5872759681ab2b9fe96a28be397f6456233aece5bf0d37acd9790e926bd3664bdc2b6f72337719'));
 
 const token = generateToken(payloadFull); 
 console.log('token:', token,'token');

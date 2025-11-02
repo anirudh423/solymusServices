@@ -1,0 +1,5 @@
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T18:32:10.087Z"}
+{"error":{},"level":"error","message":"Error processing full quote request","route":"full-quote","service":"solymus-logging","timestamp":"2025-11-02T18:33:33.034Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T18:35:47.554Z"}
+{"error":{},"level":"error","message":"Error processing full quote request","route":"full-quote","service":"solymus-logging","timestamp":"2025-11-02T18:36:36.705Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T18:38:42.092Z"}

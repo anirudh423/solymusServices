@@ -122,3 +122,44 @@
 {"level":"info","message":"Processing contacts deletion","service":"solymus-logging","timestamp":"2025-11-02T14:32:10.437Z"}
 {"level":"info","message":"Processing contacts deletion","service":"solymus-logging","timestamp":"2025-11-02T14:32:59.074Z"}
 {"level":"info","message":"Processing quick quote request","service":"solymus-logging","timestamp":"2025-11-02T16:58:02.086Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T17:24:57.955Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T17:42:36.312Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T17:47:03.092Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T17:47:21.024Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T17:47:49.084Z"}
+{"error":{},"level":"error","message":"Error processing full quote request","route":"full-quote","service":"solymus-logging","timestamp":"2025-11-02T17:47:49.142Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T17:48:58.319Z"}
+{"error":{},"level":"error","message":"Error processing full quote request","route":"full-quote","service":"solymus-logging","timestamp":"2025-11-02T17:48:58.382Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T17:50:44.403Z"}
+{"error":{},"level":"error","message":"Error processing full quote request","route":"full-quote","service":"solymus-logging","timestamp":"2025-11-02T17:50:44.467Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T17:51:34.050Z"}
+{"error":{},"level":"error","message":"Error processing full quote request","route":"full-quote","service":"solymus-logging","timestamp":"2025-11-02T17:51:34.113Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T17:53:12.610Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T17:53:51.765Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T17:55:47.669Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T17:56:36.346Z"}
+{"error":{},"level":"error","message":"Error processing full quote request","route":"full-quote","service":"solymus-logging","timestamp":"2025-11-02T17:56:48.702Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T17:59:00.348Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T18:00:21.783Z"}
+{"error":{},"level":"error","message":"Error processing full quote request","route":"full-quote","service":"solymus-logging","timestamp":"2025-11-02T18:00:21.857Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T18:01:21.915Z"}
+{"error":{},"level":"error","message":"Error processing full quote request","route":"full-quote","service":"solymus-logging","timestamp":"2025-11-02T18:01:21.978Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T18:01:42.422Z"}
+{"error":{},"level":"error","message":"Error processing full quote request","route":"full-quote","service":"solymus-logging","timestamp":"2025-11-02T18:02:52.571Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T18:03:34.508Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T18:04:05.692Z"}
+{"error":{},"level":"error","message":"Error processing full quote request","route":"full-quote","service":"solymus-logging","timestamp":"2025-11-02T18:04:15.861Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T18:07:05.194Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T18:09:45.122Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T18:12:08.793Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T18:13:09.429Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T18:15:04.522Z"}
+{"error":{},"level":"error","message":"Error processing full quote request","route":"full-quote","service":"solymus-logging","timestamp":"2025-11-02T18:15:04.588Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T18:15:39.074Z"}
+{"error":{},"level":"error","message":"Error processing full quote request","route":"full-quote","service":"solymus-logging","timestamp":"2025-11-02T18:15:39.141Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T18:16:09.574Z"}
+{"error":{},"level":"error","message":"Error processing full quote request","route":"full-quote","service":"solymus-logging","timestamp":"2025-11-02T18:16:09.642Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T18:17:12.017Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T18:17:42.467Z"}
+{"level":"info","message":"Processing full quote request","service":"solymus-logging","timestamp":"2025-11-02T18:19:23.271Z"}
+{"error":{},"level":"error","message":"Error processing full quote request","route":"full-quote","service":"solymus-logging","timestamp":"2025-11-02T18:21:17.172Z"}
