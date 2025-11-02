@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "C:\\Users\\aniru\\Desktop\\VDS\\DIP\\SOLYMUS\\solymusServices\\utils\\logs\\.4702a2534a759d4e01b88c0f7fffb043c0e72191-audit.json",
+    "files": [
+        {
+            "date": 1762074207923,
+            "name": "C:\\Users\\aniru\\Desktop\\VDS\\DIP\\SOLYMUS\\solymusServices\\utils\\logs\\app-2025-11-02.log",
+            "hash": "61a649345c7e1ead9c33d839c4fe65387237065037bff600676a9a0d425ce5dc"
+        }
+    ],
+    "hashType": "sha256"
+}

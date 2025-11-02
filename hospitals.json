@@ -1,0 +1,26 @@
+[
+  {
+    "_id": "101",
+    "name": "Solymus Clinic Test 1",
+    "address": "12 Test Road",
+    "city": "Pune",
+    "state": "Maharashtra",
+    "pincode": "411001",
+    "services": "Outpatient, Diagnostics",
+    "phone": "+91-9000000001",
+    "lat": "18.5204",
+    "lng": "73.8567"
+  },
+  {
+    "_id": "102",
+    "name": "Solymus Clinic Test 2",
+    "address": "34 Example Ave",
+    "city": "Pune",
+    "state": "Maharashtra",
+    "pincode": "411002",
+    "services": "Radiology, Emergency",
+    "phone": "+91-9000000002",
+    "lat": "18.5205",
+    "lng": "73.8570"
+  }
+]
