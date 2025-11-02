@@ -63,8 +63,7 @@ function quickQuote(payload) {
       frequency: payload.paymentFrequency || 'annual',
       installmentAmount: installment,
       installments
-    },
-    assumptions: "Illustrative rates; replace baseRate / loading / tax with insurer values."
+    }
   };
 }
 
