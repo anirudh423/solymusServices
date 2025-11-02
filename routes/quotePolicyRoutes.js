@@ -13,6 +13,7 @@ const os = require('os');
 const path = require('path');
 const { child } = require('winston');
 const Razorpay = require('razorpay');
+const { route } = require('./quotePolicyRoutes');
 
 const RAZORPAY_KEY_ID = "rzp_test_W0q8bCk2g0pA4Z";
 const RAZORPAY_KEY_SECRET = "u9V4n4v1qzK1Yl7SmHqXKq7V";
@@ -387,6 +388,26 @@ order = await instance.orders.create({
         const log = childLogger({route : 'error'});
         log.error(error.message)
         res.status(500).send(encryptData({message : error.message}))
+    }
+});
+
+router.post('/status/id' , async (req,res) => {
+    logger.info('status id policy');
+    try {
+        const log = childLogger ({route : 'status id quote policy'});
+        const data = await decryptData(req.body.encryptedData);
+        if (!data) {
+            log.error('invalid data');
+            res.status(400).send(encryptData({message:'invalid data'}));
+        };
+        var collection = await dbConnect('Solymus' , 'policies');
+        var response = await collection.find({_id : data._id}).toArray();
+        log.debug('successful retrieval of policies');
+        res.status(200).send(encryptData({message:'successful retrieval of policies' , data : response}));
+    } catch (error) {
+        const log = childLogger ( { route : 'status id quote policy'});
+        log.error(error.message);
+        res.status(500).send(encryptData({message : 'internal server error'}));
     }
 })
 
