@@ -17,3 +17,4 @@
 {"failedCount":2,"insertedCount":0,"invalidCount":0,"level":"info","message":"Bulk upload summary","processedCount":2,"route":"bulk-upload-quote-rules","service":"solymus-logging","timestamp":"2025-11-02T19:06:44.284Z"}
 {"level":"info","message":"Bulk uploading quote rules (file upload)","service":"solymus-logging","timestamp":"2025-11-02T19:07:10.779Z"}
 {"failedCount":0,"insertedCount":2,"invalidCount":0,"level":"info","message":"Bulk upload summary","processedCount":2,"route":"bulk-upload-quote-rules","service":"solymus-logging","timestamp":"2025-11-02T19:07:10.788Z"}
+{"level":"info","message":"Processing Quote retrieval","service":"solymus-logging","timestamp":"2025-11-02T19:19:23.204Z"}
